@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 
-// komponen form untuk menambahkan cafe baru oleh admin
+// Form untuk menambahkan cafe baru (admin)
 export default function AddCafe() {
   const [form, setForm] = useState({ name: '', address: '', rating: '', hours: '' });
   const navigate = useNavigate();
 
-  // mengirim data cafe baru ke backend ya gais
+  // Mengirim data cafe baru ke backend
   const handleSubmit = e => {
     e.preventDefault();
     api.post('/cafes', form).then(() => navigate('/cafes'));
@@ -15,7 +15,7 @@ export default function AddCafe() {
 
   return (
     <form onSubmit={handleSubmit} className="p-4 max-w-md mx-auto">
-      <h2 className="text-xl font-bold mb-2">Tambah Cafe</h2>
+      <h2 className="text-xl font-bold mb-2">Add Cafe</h2>
       <input
         type="text"
         placeholder="Nama Cafe"
@@ -26,7 +26,7 @@ export default function AddCafe() {
       />
       <input
         type="text"
-        placeholder="Lokasi"
+        placeholder="Alamat"
         className="border p-2 w-full mb-2"
         value={form.address}
         onChange={e => setForm({ ...form, address: e.target.value })}
@@ -50,7 +50,7 @@ export default function AddCafe() {
         max="5"
         required
       />
-      <button className="bg-blue-500 text-white px-4 py-2">Tambah</button>
+      <button className="bg-blue-500 text-white px-4 py-2">Add</button>
     </form>
   );
 }
