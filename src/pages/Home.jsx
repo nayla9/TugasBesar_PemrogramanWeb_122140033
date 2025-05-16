@@ -13,21 +13,21 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Daftar Kafe di Bandar Lampung</h1>
-      <div className="mb-3">
-        <input
-          className="form-control"
-          placeholder="Cari kafe berdasarkan nama atau lokasi..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-      </div>
+      <h1 className="section-title mb-2">Explore Local Cafés with Comfort</h1>
+      <p className="slogan mb-4">“Nge-spot Kafe Gak Pernah Seasy Ini”</p>
+
+      <input
+        className="form-control mb-4"
+        placeholder="Cari kafe berdasarkan nama atau lokasi..."
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
 
       {filteredCafes.length === 0 && <p>Tidak ada kafe yang sesuai.</p>}
 
       <div className="row">
         {filteredCafes.map(cafe => (
-          <div className="col-md-6" key={cafe.id}>
+          <div className="col-md-6 col-lg-4 mb-4" key={cafe.id}>
             <CafeCard cafe={cafe} />
           </div>
         ))}

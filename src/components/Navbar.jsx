@@ -12,12 +12,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark shadow-sm">
       <div className="container">
-        <Link className="navbar-brand" to="/">CaféFinder.ID</Link>
+        <Link className="navbar-brand fs-4 fw-bold" to="/">CaféFinder.ID</Link>
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav me-auto">
-            {user && user.role === 'admin' && (
+            {user?.role === 'admin' && (
               <li className="nav-item">
                 <Link className="nav-link" to="/admin">Dashboard Admin</Link>
               </li>
@@ -26,18 +26,14 @@ const Navbar = () => {
           <ul className="navbar-nav ms-auto">
             {!user ? (
               <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">Login</Link>
-                </li>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/register">Register</Link>
-                </li>
+                <li className="nav-item"><Link className="nav-link" to="/login">Login</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/register">Register</Link></li>
               </>
             ) : (
               <>
-                <li className="nav-item nav-link disabled">Hello, {user.username}</li>
+                <li className="nav-item nav-link disabled">Hi, {user.username}</li>
                 <li className="nav-item">
-                  <button onClick={handleLogout} className="btn btn-link nav-link">Logout</button>
+                  <button onClick={handleLogout} className="btn btn-outline-light btn-sm">Logout</button>
                 </li>
               </>
             )}
@@ -49,4 +45,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
