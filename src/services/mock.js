@@ -16,7 +16,7 @@ export const mockCafes = [
     rating: 4.2,
     description: "Cafe industrial dengan kopi spesialti.",
     image: "https://source.unsplash.com/400x300/?cafe"
-  }
+  },
   {
     id: 3,
     name: "Bento Kopi Lampung",
