@@ -1,26 +1,33 @@
 import React, { useState, useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const { login } = useContext(AppContext);
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ username: '', role: 'user' });
+  const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError('');
     if (!form.username.trim()) {
-      alert('Username harus diisi');
+      setError('Username harus diisi');
       return;
     }
-    login(form.username.trim(), form.role);
+    const res = login(form);
+    if (!res.success) {
+      setError(res.message);
+      return;
+    }
     navigate('/');
   };
 
   return (
     <div className="mx-auto" style={{ maxWidth: '400px' }}>
       <h2>Login</h2>
+      {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label>Username</label>
@@ -31,7 +38,6 @@ const Login = () => {
             required
           />
         </div>
-
         <div className="mb-3">
           <label>Role</label>
           <select
@@ -43,9 +49,11 @@ const Login = () => {
             <option value="admin">Admin</option>
           </select>
         </div>
-
-        <button type="submit" className="btn btn-primary">Login</button>
+        <button type="submit" className="btn btn-brown">Login</button>
       </form>
+      <p className="mt-3">
+        Belum punya akun? <Link to="/register">Register di sini</Link>
+      </p>
     </div>
   );
 };
