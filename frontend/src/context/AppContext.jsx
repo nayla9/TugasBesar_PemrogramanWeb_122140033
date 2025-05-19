@@ -1,9 +1,11 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { mockCafes } from '../services/mock'; 
+import { mockCafes } from '../services/mock';
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const ADMIN_SECRET = 'admin123';
+
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('user');
     return saved ? JSON.parse(saved) : null;
@@ -32,19 +34,24 @@ export const AppProvider = ({ children }) => {
     else localStorage.removeItem('user');
   }, [user]);
 
-  const register = ({ username, role }) => {
-    if (users.find(u => u.username === username)) {
-      return { success: false, message: 'Username sudah terdaftar' };
+  const register = ({ username, email, password }) => {
+    if (users.find(u => u.email === email)) {
+      return { success: false, message: 'Email sudah terdaftar' };
     }
-    const newUser = { username, role };
+    const newUser = { username, email, password, role: 'user' };
     setUsers(prev => [...prev, newUser]);
     return { success: true, message: 'Registrasi berhasil' };
   };
 
-  const login = ({ username, role }) => {
-    const found = users.find(u => u.username === username && u.role === role);
+  const login = ({ email, password, username = 'Admin' }) => {
+    if (password === ADMIN_SECRET) {
+      setUser({ username, email, role: 'admin' });
+      return { success: true };
+    }
+
+    const found = users.find(u => u.email === email && u.password === password);
     if (!found) {
-      return { success: false, message: 'User tidak ditemukan atau role salah' };
+      return { success: false, message: 'Email atau password salah' };
     }
     setUser(found);
     return { success: true };
@@ -52,7 +59,6 @@ export const AppProvider = ({ children }) => {
 
   const logout = () => setUser(null);
 
-  // CRUD untuk kafe
   const addCafe = (cafe) => {
     setCafes(prev => [...prev, { ...cafe, id: Date.now(), reviews: [] }]);
   };
@@ -65,14 +71,12 @@ export const AppProvider = ({ children }) => {
     setCafes(prev => prev.filter(c => c.id !== id));
   };
 
-  // Menambahkan review + hitung ulang rating
   const addReview = (cafeId, review) => {
     setCafes(prev =>
       prev.map(cafe => {
         if (cafe.id === cafeId) {
           const newReviews = [...cafe.reviews, { ...review, id: Date.now() }];
-          const newRating =
-            newReviews.reduce((sum, r) => sum + r.rating, 0) / newReviews.length;
+          const newRating = newReviews.reduce((sum, r) => sum + r.rating, 0) / newReviews.length;
           return {
             ...cafe,
             reviews: newReviews,
