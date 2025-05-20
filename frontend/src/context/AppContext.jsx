@@ -43,12 +43,20 @@ export const AppProvider = ({ children }) => {
     return { success: true, message: 'Registrasi berhasil' };
   };
 
-  const login = ({ email, password, username = 'Admin' }) => {
+  const login = ({ email, password, username = 'Google User' }) => {
+    // Simulasi login Google (pakai email Google tanpa password)
+    if (email === 'googleuser@gmail.com') {
+      setUser({ username: 'Google User', email, role: 'user' });
+      return { success: true };
+    }
+
+    // Login admin jika password cocok
     if (password === ADMIN_SECRET) {
       setUser({ username, email, role: 'admin' });
       return { success: true };
     }
 
+    // Cek login user biasa
     const found = users.find(u => u.email === email && u.password === password);
     if (!found) {
       return { success: false, message: 'Email atau password salah' };
@@ -59,6 +67,7 @@ export const AppProvider = ({ children }) => {
 
   const logout = () => setUser(null);
 
+  // CRUD café
   const addCafe = (cafe) => {
     setCafes(prev => [...prev, { ...cafe, id: Date.now(), reviews: [] }]);
   };
