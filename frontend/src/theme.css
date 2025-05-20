@@ -1,26 +1,20 @@
 :root {
-  /* Palet dari gambar (warna dominan café) */
-  --cream-light: #ede2d5;  /* background utama */
-  --cream: #e3cdb5;        /* card dan input */
-  --sand: #deb78b;         /* aksen, hover */
+  --mocha: #B99976;
+  --latte: #D2B48C;
+  --cream: #E5D3B3;
+  --espresso: #987554;
+  --deep-roast: #664229;
 
-  /* Warna utama web café */
-  --brown-soft: #6D4C41;
-  --brown-deep: #4E342E;
-  --brown-medium: #7b5035;
-  --brown-dark: #9b5f3a;
-
-  /* Aksen tambahan */
-  --accent: #FFB74D;
-  --text-dark: #3b2c23;
-  --text-light: #FAF3EF;
+  --text-light: #fdf7f1;
+  --text-dark: #3b2b22;
   --font-main: 'Segoe UI', sans-serif;
 }
 
 body {
-  background-color: var(--cream-light);
+  background-color: var(--mocha);
   color: var(--text-dark);
   font-family: var(--font-main);
+  line-height: 1.6;
 }
 
 a, a:hover {
@@ -29,31 +23,53 @@ a, a:hover {
 }
 
 .navbar, .footer {
-  background-color: var(--brown-medium) !important;
+  background-color: var(--deep-roast) !important;
   color: var(--text-light);
+  border-radius: 0 0 16px 16px;
 }
 
 .card {
   background-color: var(--cream);
   border: none;
   border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   transition: transform 0.2s ease;
 }
 
 .card:hover {
   transform: scale(1.01);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--espresso);
+}
+
+.slogan {
+  font-style: italic;
+  color: var(--espresso);
 }
 
 /* Input dan form */
 input, textarea, select, .form-control {
+  background-color: var(--cream);
+  border: 1px solid var(--latte);
   border-radius: 12px !important;
+  padding: 10px 12px;
+  color: var(--text-dark);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--espresso);
+  box-shadow: 0 0 0 2px rgba(152, 117, 84, 0.2);
 }
 
 /* Tombol utama khas café */
 .btn-brown {
-  background-color: var(--brown-dark);
+  background-color: var(--espresso);
   color: #fff;
   border: none;
   border-radius: 12px;
@@ -61,7 +77,7 @@ input, textarea, select, .form-control {
   transition: background-color 0.3s ease;
 }
 .btn-brown:hover {
-  background-color: var(--brown-deep);
+  background-color: var(--deep-roast);
   color: #fff;
 }
 
@@ -77,28 +93,7 @@ input, textarea, select, .form-control {
   align-items: center;
   justify-content: center;
 }
+
 .btn-google:hover {
   background-color: #eee;
-}
-
-/* Section & teks */
-.section-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--brown-medium);
-}
-
-.slogan {
-  font-style: italic;
-  color: var(--brown-soft);
-}
-
-/* Tombol utama lainnya */
-.btn-primary {
-  background-color: var(--brown-soft);
-  border-color: var(--brown-soft);
-}
-.btn-primary:hover {
-  background-color: var(--brown-deep);
-  border-color: var(--brown-deep);
 }
