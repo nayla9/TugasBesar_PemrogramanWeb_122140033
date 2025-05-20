@@ -7,17 +7,17 @@ const AdminDashboard = () => {
   const [editingCafe, setEditingCafe] = useState(null);
   const [showForm, setShowForm] = useState(false);
 
-  const handleAddClick = () => {
+   const handleAdd = () => {
     setEditingCafe(null);
     setShowForm(true);
   };
 
-  const handleEditClick = (cafe) => {
+  const handleEdit = (cafe) => {
     setEditingCafe(cafe);
     setShowForm(true);
   };
 
-  const handleDeleteClick = (id) => {
+  const handleDelete = (id) => {
     if (window.confirm('Yakin ingin menghapus café ini?')) {
       deleteCafe(id);
     }
@@ -34,36 +34,37 @@ const AdminDashboard = () => {
 
   return (
     <div>
-      <h2>Dashboard Admin</h2>
-      {!showForm && (
+      <h2 className="section-title">Dashboard Admin</h2>
+      {!showForm ? (
         <>
-          <button className="btn btn-success mb-3" onClick={handleAddClick}>Tambah Café Baru</button>
-          <table className="table table-striped">
-            <thead>
-              <tr>
-                <th>Nama</th>
-                <th>Lokasi</th>
-                <th>Jam Buka</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {cafes.map(cafe => (
-                <tr key={cafe.id}>
-                  <td>{cafe.name}</td>
-                  <td>{cafe.location}</td>
-                  <td>{cafe.open_hours}</td>
-                  <td>
-                    <button className="btn btn-primary btn-sm me-2" onClick={() => handleEditClick(cafe)}>Edit</button>
-                    <button className="btn btn-danger btn-sm" onClick={() => handleDeleteClick(cafe.id)}>Hapus</button>
-                  </td>
+          <button className="btn btn-brown mb-3" onClick={handleAdd}>+ Tambah Café</button>
+          <div className="table-responsive">
+            <table className="table table-hover table-bordered align-middle">
+              <thead className="table-light">
+                <tr>
+                  <th>Nama</th>
+                  <th>Lokasi</th>
+                  <th>Jam Buka</th>
+                  <th>Aksi</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {cafes.map(cafe => (
+                  <tr key={cafe.id}>
+                    <td>{cafe.name}</td>
+                    <td>{cafe.location}</td>
+                    <td>{cafe.open_hours}</td>
+                    <td>
+                      <button className="btn btn-sm btn-primary me-2" onClick={() => handleEdit(cafe)}>Edit</button>
+                      <button className="btn btn-sm btn-danger" onClick={() => handleDelete(cafe.id)}>Hapus</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </>
-      )}
-      {showForm && (
+      ) : (
         <CafeForm
           initialData={editingCafe}
           onSubmit={handleFormSubmit}

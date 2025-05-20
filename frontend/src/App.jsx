@@ -4,6 +4,8 @@ import AppRoutes from './routes/AppRoutes';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { AppProvider } from './context/AppContext';
+import './theme.css';
+
 
 function App() {
   return (

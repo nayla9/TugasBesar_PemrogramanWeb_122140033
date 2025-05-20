@@ -97,3 +97,12 @@ input:focus, textarea:focus, select:focus {
 .btn-google:hover {
   background-color: #eee;
 }
+
+.btn-primary {
+  background-color: var(--espresso);
+  border-color: var(--espresso);
+}
+.btn-primary:hover {
+  background-color: var(--deep-roast);
+  border-color: var(--deep-roast);
+}
