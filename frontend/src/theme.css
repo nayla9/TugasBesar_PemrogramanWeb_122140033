@@ -1,15 +1,25 @@
 :root {
-  --brown-dark: #4E342E;
-  --brown: #6D4C41;
-  --brown-light: #D7CCC8;
+  /* Palet dari gambar (warna dominan café) */
+  --cream-light: #ede2d5;  /* background utama */
+  --cream: #e3cdb5;        /* card dan input */
+  --sand: #deb78b;         /* aksen, hover */
+
+  /* Warna utama web café */
+  --brown-soft: #6D4C41;
+  --brown-deep: #4E342E;
+  --brown-medium: #7b5035;
+  --brown-dark: #9b5f3a;
+
+  /* Aksen tambahan */
   --accent: #FFB74D;
+  --text-dark: #3b2c23;
   --text-light: #FAF3EF;
   --font-main: 'Segoe UI', sans-serif;
 }
 
 body {
-  background-color: var(--brown-light);
-  color: #333;
+  background-color: var(--cream-light);
+  color: var(--text-dark);
   font-family: var(--font-main);
 }
 
@@ -19,51 +29,76 @@ a, a:hover {
 }
 
 .navbar, .footer {
-  background-color: var(--brown-dark) !important;
+  background-color: var(--brown-medium) !important;
   color: var(--text-light);
 }
 
 .card {
+  background-color: var(--cream);
   border: none;
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   transition: transform 0.2s ease;
-  background-color: #fff;
 }
 
 .card:hover {
   transform: scale(1.01);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.btn-primary {
-  background-color: var(--brown);
-  border-color: var(--brown);
+/* Input dan form */
+input, textarea, select, .form-control {
+  border-radius: 12px !important;
 }
 
-.btn-primary:hover {
-  background-color: var(--brown-dark);
-}
-
-.section-title {
-  font-size: 2rem;
-  font-weight: bold;
-  color: var(--brown-dark);
-}
-
-.slogan {
-  font-style: italic;
-  color: var(--brown);
-}
-
+/* Tombol utama khas café */
 .btn-brown {
-  background-color: var(--brown);
+  background-color: var(--brown-dark);
   color: #fff;
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
   padding: 8px 16px;
   transition: background-color 0.3s ease;
 }
 .btn-brown:hover {
-  background-color: var(--brown-dark);
+  background-color: var(--brown-deep);
   color: #fff;
+}
+
+/* Tombol untuk Google login */
+.btn-google {
+  background-color: white;
+  color: #444;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-google:hover {
+  background-color: #eee;
+}
+
+/* Section & teks */
+.section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--brown-medium);
+}
+
+.slogan {
+  font-style: italic;
+  color: var(--brown-soft);
+}
+
+/* Tombol utama lainnya */
+.btn-primary {
+  background-color: var(--brown-soft);
+  border-color: var(--brown-soft);
+}
+.btn-primary:hover {
+  background-color: var(--brown-deep);
+  border-color: var(--brown-deep);
 }
