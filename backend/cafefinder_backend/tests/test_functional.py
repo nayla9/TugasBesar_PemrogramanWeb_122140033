@@ -1,4 +1,4 @@
-from cafefinder_API import models
+from cafefinder_backend import models
 
 def test_my_view_success(testapp, dbsession):
     model = models.MyModel(name='one', value=55)

@@ -29,7 +29,7 @@ tests_require = [
 ]
 
 setup(
-    name='cafefinder_API',
+    name='cafefinder_backend',
     version='0.0',
     description='cafefinder_backend',
     long_description=README + '\n\n' + CHANGES,
@@ -52,10 +52,10 @@ setup(
     install_requires=requires,
     entry_points={
         'paste.app_factory': [
-            'main = cafefinder_API:main',
+            'main = cafefinder_backend:main',
         ],
         'console_scripts': [
-            'initialize_cafefinder_API_db=cafefinder_API.scripts.initialize_db:main',
+            'initialize_cafefinder_backend_db=cafefinder_backend.scripts.initialize_db:main',
         ],
     },
 )
