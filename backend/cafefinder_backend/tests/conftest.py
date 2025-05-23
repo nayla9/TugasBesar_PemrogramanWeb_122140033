@@ -9,9 +9,9 @@ import pytest
 import transaction
 import webtest
 
-from cafefinder_backend import main
-from cafefinder_backend import models
-from cafefinder_backend.models.meta import Base
+from cafefinder_API import main
+from cafefinder_API import models
+from cafefinder_API.models.meta import Base
 
 
 def pytest_addoption(parser):

@@ -1,6 +1,6 @@
-from cafefinder_backend import models
-from cafefinder_backend.views.default import my_view
-from cafefinder_backend.views.notfound import notfound_view
+from cafefinder_API import models
+from cafefinder_API.views.default import my_view
+from cafefinder_API.views.notfound import notfound_view
 
 
 def test_my_view_failure(app_request):

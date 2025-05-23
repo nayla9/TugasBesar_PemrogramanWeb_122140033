@@ -52,7 +52,7 @@ setup(
     install_requires=requires,
     entry_points={
         'paste.app_factory': [
-            'main = cafefinder_backend:main',
+            'main = cafefinder_api.__init__:main',
         ],
         'console_scripts': [
             'initialize_cafefinder_backend_db=cafefinder_backend.scripts.initialize_db:main',

@@ -3,7 +3,7 @@ from alembic import context
 from pyramid.paster import get_appsettings, setup_logging
 from sqlalchemy import engine_from_config
 
-from cafefinder_backend.models.meta import Base
+from cafefinder_API.models.meta import Base
 
 config = context.config
 
