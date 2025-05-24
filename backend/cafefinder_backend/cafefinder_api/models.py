@@ -30,3 +30,8 @@ class Review(Base):
     comment = Column(Text)
     rating = Column(Integer)
     cafe = relationship("Cafe", back_populates="reviews")
+
+class MyModel(Base):
+    __tablename__ = 'my_table'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)

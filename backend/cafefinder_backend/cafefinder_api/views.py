@@ -5,6 +5,12 @@ from .models import DBSession, Cafe, Review, User
 from passlib.hash import pbkdf2_sha256
 import json
 
+query = request.dbsession.query(models.Cafe)
+
+@view_config(route_name='home', renderer='json')
+def home_view(request):
+    return {'message': 'API CaféFinder aktif'}
+
 @view_config(route_name='register', renderer='json')
 def register(request):
     data = request.json_body

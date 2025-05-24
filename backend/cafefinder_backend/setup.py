@@ -10,14 +10,14 @@ with open(os.path.join(here, 'CHANGES.txt')) as f:
 
 requires = [
     'plaster_pastedeploy',
-    'pyramid',
-    'pyramid_jinja2',
+    'pyramid=>2.0',
+    'pyramid_jinja2>=2.7',
     'pyramid_debugtoolbar',
-    'waitress',
+    'waitress>=2.1',
     'alembic',
     'pyramid_retry',
     'pyramid_tm',
-    'SQLAlchemy',
+    'SQLAlchemy>=1.4',
     'transaction',
     'zope.sqlalchemy',
 ]
@@ -30,7 +30,7 @@ tests_require = [
 
 setup(
     name='cafefinder_backend',
-    version='0.0',
+    version='1.0.0',
     description='cafefinder_backend',
     long_description=README + '\n\n' + CHANGES,
     classifiers=[
@@ -39,9 +39,9 @@ setup(
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: WSGI :: Application',
     ],
-    author='',
-    author_email='',
-    url='',
+    author='nayla',
+    author_email='naylafk1235@gmail.com',
+    url='https://github.com/nayla9/TugasBesar_PemrogramanWeb_122140033',
     keywords='web pyramid pylons',
     packages=find_packages(exclude=['tests']),
     include_package_data=True,

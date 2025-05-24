@@ -13,10 +13,12 @@ def main(global_config, **settings):
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
 
+    config.add_request_method(lambda r: DBSession, 'dbsession', reify=True)
+
      # Register routes dan views secara eksplisit
     from cafefinder_api import routes
     from cafefinder_api import views
     
     config.include(routes.includeme)
-    config.scan()
+    config.scan('cafefinder_api.views')
     return config.make_wsgi_app()
