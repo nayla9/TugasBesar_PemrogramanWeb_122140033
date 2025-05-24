@@ -1,4 +1,5 @@
 def includeme(config):
+    config.add_route('home', '/')
     config.add_route('get_cafes', '/cafes')
     config.add_route('add_cafe', '/cafes', request_method='POST')
     config.add_route('edit_cafe', '/cafes/{id}', request_method='PUT')

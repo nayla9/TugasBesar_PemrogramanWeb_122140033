@@ -3,7 +3,6 @@ from sqlalchemy import engine_from_config
 from sqlalchemy.orm import sessionmaker, scoped_session
 from cafefinder_api.models import Base
 
-
 DBSession = scoped_session(sessionmaker())
 
 def main(global_config, **settings):
@@ -14,9 +13,10 @@ def main(global_config, **settings):
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
 
-    # Include routes
-    config.include('.routes')
-    config.include('.views')
-
+     # Register routes dan views secara eksplisit
+    from cafefinder_api import routes
+    from cafefinder_api import views
+    
+    config.include(routes.includeme)
     config.scan()
     return config.make_wsgi_app()
