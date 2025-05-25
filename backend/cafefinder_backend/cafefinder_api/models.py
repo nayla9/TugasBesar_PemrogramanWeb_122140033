@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Text, Float, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey
 from sqlalchemy.orm import relationship, declarative_base
 
 Base = declarative_base()
@@ -6,15 +6,15 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
-    username = Column(String(50), nullable=False)
-    email = Column(String(100), unique=True, nullable=False)
-    password = Column(String(255), nullable=False)
-    role = Column(String(10), default='user')  # 'user' or 'admin'
+    username = Column(String(50))
+    email = Column(String(100), unique=True)
+    password = Column(String(255))
+    role = Column(String(10), default='user')
 
 class Cafe(Base):
     __tablename__ = 'cafes'
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(100))
     location = Column(String(100))
     open_hours = Column(String(100))
     description = Column(Text)
@@ -25,13 +25,8 @@ class Cafe(Base):
 class Review(Base):
     __tablename__ = 'reviews'
     id = Column(Integer, primary_key=True)
-    cafe_id = Column(Integer, ForeignKey('cafes.id'), nullable=False)
+    cafe_id = Column(Integer, ForeignKey('cafes.id'))
     username = Column(String(100))
     comment = Column(Text)
     rating = Column(Integer)
     cafe = relationship("Cafe", back_populates="reviews")
-
-class MyModel(Base):
-    __tablename__ = 'my_table'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
