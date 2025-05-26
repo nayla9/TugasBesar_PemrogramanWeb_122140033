@@ -1,0 +1,6 @@
+pyramid
+waitress
+sqlalchemy
+psycopg2-binary
+passlib
+pyramid_jinja2
