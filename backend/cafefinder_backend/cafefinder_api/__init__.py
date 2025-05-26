@@ -1,14 +1,19 @@
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
-from cafefinder_api.models import DBSession, Base
+from sqlalchemy.orm import sessionmaker, scoped_session
+from cafefinder_api.models.models import Base
+
+DBSession = scoped_session(sessionmaker())
 
 def main(global_config, **settings):
     config = Configurator(settings=settings)
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     Base.metadata.bind = engine
+    
+    from cafefinder_api import routes
+    config.include(routes.includeme)
 
-    config.include('cafefinder_api.routes')
-    config.scan('cafefinder_api.views')
+    config.scan()
 
     return config.make_wsgi_app()
