@@ -6,7 +6,7 @@ requires = [
     'sqlalchemy',
     'psycopg2-binary',
     'passlib',
-    'pyramid_jinja2',
+    'pyramid_jinja2'
 ]
 
 setup(

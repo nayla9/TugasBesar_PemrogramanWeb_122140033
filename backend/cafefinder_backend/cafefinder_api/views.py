@@ -33,6 +33,7 @@ def get_cafes(request):
         'id': c.id,
         'name': c.name,
         'location': c.location,
+        'open_hours': c.open_hours,
         'description': c.description,
         'image': c.image,
         'rating': c.rating

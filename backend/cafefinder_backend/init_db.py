@@ -1,4 +1,3 @@
-from sqlalchemy import engine_from_config
 from cafefinder_api.models import Base
 from cafefinder_api.__init__ import DBSession
 
@@ -9,4 +8,4 @@ settings = {
 engine = engine_from_config(settings, 'sqlalchemy.')
 DBSession.configure(bind=engine)
 Base.metadata.create_all(bind=engine)
-print("✅ Semua tabel berhasil dibuat")
+print("Semua tabel berhasil dibuat")
