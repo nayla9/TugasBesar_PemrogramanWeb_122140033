@@ -4,6 +4,10 @@ from cafefinder_api.models import DBSession, User, Cafe
 from passlib.hash import pbkdf2_sha256
 import json
 
+@view_config(route_name='home', renderer='json')
+def home_view(request):
+    return {'message': 'Selamat datang di CafeFinder API'}
+
 @view_config(route_name='register', renderer='json')
 def register(request):
     data = request.json_body

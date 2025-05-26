@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float, Text, ForeignKey
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.orm import relationship, declarative_base, sessionmaker, scoped_session
 
 Base = declarative_base()
 
@@ -30,3 +30,5 @@ class Review(Base):
     comment = Column(Text)
     rating = Column(Integer)
     cafe = relationship("Cafe", back_populates="reviews")
+
+DBSession = scoped_session(sessionmaker())

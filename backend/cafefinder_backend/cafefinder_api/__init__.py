@@ -14,5 +14,5 @@ def main(global_config, **settings):
     from cafefinder_api import routes
     config.include(routes.includeme)
 
-    config.scan()
+    config.scan('cafefinder_api.views')
     return config.make_wsgi_app()
