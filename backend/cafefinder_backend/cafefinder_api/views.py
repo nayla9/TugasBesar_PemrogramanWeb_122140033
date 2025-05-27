@@ -1,6 +1,6 @@
 from pyramid.view import view_config
 from pyramid.response import Response
-from cafefinder_backend.__init__ import DBSession
+from cafefinder_api.__init__ import DBSession
 from cafefinder_backend.models.models import User, Cafe, Review
 from passlib.hash import pbkdf2_sha256
 import json
