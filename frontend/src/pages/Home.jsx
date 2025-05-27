@@ -1,10 +1,20 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect} from 'react';
 import { AppContext } from '../context/AppContext';
 import CafeCard from '../components/CafeCard';
+import { getCafes } from '../services/api';
 
 const Home = () => {
   const { cafes } = useContext(AppContext);
   const [search, setSearch] = useState('');
+  const [fetchedCafes, setFetchedCafes] = useState([]);
+
+useEffect(() => {
+  getCafes()
+    .then(res => setCafes(res.data))
+    .catch(err => console.error('Gagal mengambil data kafe:', err));
+}, []);
+
+  const sourceCafes = fetchedCafes.length > 0 ? fetchedCafes : cafes;
 
   const filteredCafes = cafes.filter(c =>
     c.name.toLowerCase().includes(search.toLowerCase()) ||

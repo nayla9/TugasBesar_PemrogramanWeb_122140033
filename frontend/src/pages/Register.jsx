@@ -1,6 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { registerUser } from '../services/api';
+
 
 const Register = () => {
   const { register } = useContext(AppContext);
@@ -14,19 +16,20 @@ const Register = () => {
     e.preventDefault();
     setError('');
     setSuccess('');
+
     const { username, email, password } = form;
     if (!username || !email || !password) {
       setError('Semua kolom wajib diisi');
       return;
     }
-    const res = register(form);
-    if (!res.success) {
-      setError(res.message);
-      return;
+    try {
+      const res = await registerUser(form);
+      setSuccess(res.data.message || 'Registrasi berhasil.');
+      setForm({ username: '', email: '', password: '' });
+      setTimeout(() => navigate('/login'), 1500);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Gagal registrasi');
     }
-    setSuccess('Registrasi berhasil. Silakan login.');
-    setForm({ username: '', email: '', password: '' });
-    setTimeout(() => navigate('/login'), 1500);
   };
 
   return (

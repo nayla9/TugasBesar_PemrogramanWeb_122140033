@@ -30,8 +30,11 @@ export const AppProvider = ({ children }) => {
   }, [cafes]);
 
   useEffect(() => {
-    if (user) localStorage.setItem('user', JSON.stringify(user));
-    else localStorage.removeItem('user');
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
   }, [user]);
 
   const register = ({ username, email, password }) => {
@@ -44,28 +47,37 @@ export const AppProvider = ({ children }) => {
   };
 
   const login = ({ email, password, username = 'Google User' }) => {
-    // Simulasi login Google (pakai email Google tanpa password)
+    // Login Google (bypass password)
     if (email === 'googleuser@gmail.com') {
-      setUser({ username: 'Google User', email, role: 'user' });
+      const googleUser = { username: 'Google User', email, role: 'user' };
+      setUser(googleUser);
+      localStorage.setItem('user', JSON.stringify(googleUser));
       return { success: true };
     }
 
-    // Login admin jika password cocok
+    // Admin login
     if (password === ADMIN_SECRET) {
-      setUser({ username, email, role: 'admin' });
+      const adminUser = { username, email, role: 'admin' };
+      setUser(adminUser);
+      localStorage.setItem('user', JSON.stringify(adminUser));
       return { success: true };
     }
 
-    // Cek login user biasa
+    // User login
     const found = users.find(u => u.email === email && u.password === password);
     if (!found) {
       return { success: false, message: 'Email atau password salah' };
     }
+
     setUser(found);
+    localStorage.setItem('user', JSON.stringify(found));
     return { success: true };
   };
 
-  const logout = () => setUser(null);
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+  };
 
   // CRUD café
   const addCafe = (cafe) => {

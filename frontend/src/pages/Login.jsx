@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
-import { AppContext } from '../context/AppContext';
 import { useNavigate, Link } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
+import { loginUser } from '../services/api';
 
 const Login = () => {
   const { login } = useContext(AppContext);
@@ -9,20 +10,21 @@ const Login = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    const res = login(form);
-    if (!res.success) {
-      setError(res.message);
-    } else {
+    try {
+      const res = await loginUser(form);     // Panggil backend
+      login(res.data);                       // Simpan ke context
       navigate('/');
+    } catch (err) {
+      setError(err.response?.data?.error || 'Gagal login');
     }
   };
 
   const handleGoogleLogin = () => {
     alert('Ini simulasi login Google. Untuk fitur asli, hubungkan dengan Google OAuth di backend nanti ya.');
-    login({ email: 'googleuser@gmail.com', password: '', username: 'Google User' });
+    login({ email: 'googleuser@gmail.com', username: 'Google User', role: 'user' });
     navigate('/');
   };
 
