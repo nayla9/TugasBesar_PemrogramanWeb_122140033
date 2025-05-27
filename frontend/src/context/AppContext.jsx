@@ -21,6 +21,7 @@ export const AppProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : mockCafes;
   });
 
+  // Simpan ke localStorage setiap ada perubahan
   useEffect(() => {
     localStorage.setItem('users', JSON.stringify(users));
   }, [users]);
@@ -30,13 +31,11 @@ export const AppProvider = ({ children }) => {
   }, [cafes]);
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('user');
-    }
+    if (user) localStorage.setItem('user', JSON.stringify(user));
+    else localStorage.removeItem('user');
   }, [user]);
 
+  // --- Autentikasi ---
   const register = ({ username, email, password }) => {
     if (users.find(u => u.email === email)) {
       return { success: false, message: 'Email sudah terdaftar' };
@@ -47,11 +46,10 @@ export const AppProvider = ({ children }) => {
   };
 
   const login = ({ email, password, username = 'Google User' }) => {
-    // Login Google (bypass password)
+    // Google login
     if (email === 'googleuser@gmail.com') {
       const googleUser = { username: 'Google User', email, role: 'user' };
       setUser(googleUser);
-      localStorage.setItem('user', JSON.stringify(googleUser));
       return { success: true };
     }
 
@@ -59,7 +57,6 @@ export const AppProvider = ({ children }) => {
     if (password === ADMIN_SECRET) {
       const adminUser = { username, email, role: 'admin' };
       setUser(adminUser);
-      localStorage.setItem('user', JSON.stringify(adminUser));
       return { success: true };
     }
 
@@ -70,16 +67,14 @@ export const AppProvider = ({ children }) => {
     }
 
     setUser(found);
-    localStorage.setItem('user', JSON.stringify(found));
     return { success: true };
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
   };
 
-  // CRUD café
+  // --- CRUD café ---
   const addCafe = (cafe) => {
     setCafes(prev => [...prev, { ...cafe, id: Date.now(), reviews: [] }]);
   };
@@ -111,7 +106,7 @@ export const AppProvider = ({ children }) => {
 
   return (
     <AppContext.Provider value={{
-      user, login, logout, register,
+      user, setUser, login, logout, register,
       cafes, addCafe, editCafe, deleteCafe, addReview
     }}>
       {children}

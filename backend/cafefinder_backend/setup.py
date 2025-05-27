@@ -17,7 +17,7 @@ setup(
     install_requires=requires,
     entry_points={
         'paste.app_factory': [
-            'main = cafefinder_api.__init__:main'
+            'main = cafefinder_backend.__init__:main'
         ]
     },
 )

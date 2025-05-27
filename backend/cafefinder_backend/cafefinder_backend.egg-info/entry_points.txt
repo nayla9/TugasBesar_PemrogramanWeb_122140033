@@ -1,0 +1,2 @@
+[paste.app_factory]
+main = cafefinder_backend.__init__:main
