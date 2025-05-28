@@ -1,23 +1,27 @@
 from setuptools import setup, find_packages
 
-requires = [
-    'pyramid',
-    'waitress',
-    'sqlalchemy',
-    'psycopg2-binary',
-    'passlib',
-    'pyramid_jinja2'
-]
-
 setup(
     name='cafefinder_backend',
-    version='1.0',
+    version='0.1',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=requires,
+    install_requires=[
+        'pyramid',
+        'waitress',
+        'sqlalchemy',
+        'psycopg2-binary',
+        'alembic',
+        'passlib',
+        'pyramid_jinja2',
+        'pyramid_debugtoolbar',
+        'zope.sqlalchemy',
+        'transaction',
+        'pyramid_tm',
+        'pyramid_retry',
+    ],
     entry_points={
         'paste.app_factory': [
-            'main = cafefinder_backend.__init__:main'
-        ]
+            'main = cafefinder_backend:main',
+        ],
     },
 )

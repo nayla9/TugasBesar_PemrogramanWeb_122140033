@@ -1,2 +1,0 @@
-cafefinder_api
-models
