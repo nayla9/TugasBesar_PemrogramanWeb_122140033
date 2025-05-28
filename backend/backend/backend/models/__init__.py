@@ -7,6 +7,8 @@ from .users import User
 from .cafe import Cafe
 from .reviews import Review
 
+from utils.security import hash_password, verify_password
+
 # Kalau ada model lain, import juga di sini
 # from .mymodel import MyModel  # contoh import model lain
 from .mymodel import MyModel

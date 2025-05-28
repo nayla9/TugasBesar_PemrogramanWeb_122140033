@@ -2,6 +2,7 @@ from pyramid.view import view_config
 from ..models import User
 from passlib.hash import bcrypt
 from .auth import require_role
+from utils.security import hash_password, verify_password
 
 @view_config(route_name="register", renderer="json", request_method="POST")
 def register_user(request):

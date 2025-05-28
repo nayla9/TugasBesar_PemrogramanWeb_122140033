@@ -1,5 +1,11 @@
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from pyramid.config import Configurator
 from pyramid.session import SignedCookieSessionFactory
+from utils.security import hash_password, verify_password
 
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.

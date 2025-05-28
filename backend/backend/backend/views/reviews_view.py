@@ -2,6 +2,7 @@ from pyramid.view import view_config
 from ..models import Review, Cafe
 from .auth import get_current_user, require_role
 from pyramid.httpexceptions import HTTPForbidden
+from utils.security import hash_password, verify_password
 
 @view_config(route_name='review_list', renderer='json', request_method='GET')
 def review_list(request):

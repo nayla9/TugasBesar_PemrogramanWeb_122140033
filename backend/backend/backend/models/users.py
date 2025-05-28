@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from .meta import Base
+from utils.security import hash_password, verify_password
 
 class User(Base):
     __tablename__ = 'users'

@@ -1,6 +1,7 @@
 from pyramid.view import view_config
 from ..models import Cafe
 from .auth import get_current_user
+from utils.security import hash_password, verify_password
 
 # Middleware fungsi untuk mengecek admin
 def require_admin(request):

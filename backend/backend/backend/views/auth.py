@@ -1,5 +1,6 @@
 from pyramid.httpexceptions import HTTPForbidden
 from ..models import User
+from utils.security import hash_password, verify_password
 
 def get_current_user(request):
     """

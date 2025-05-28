@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from backend.backend.models import User  # sesuaikan import dengan lokasi modelmu
-from hash_password import hash_password
+from backend.backend.models.users import User
+from backend.utils.security import hash_password, verify_password
 
-# Sesuaikan connection string dengan setting database kamu
+# Bisa gunakan variabel dari environment atau file .ini
 DATABASE_URL = "postgresql://postgres:nana123123@localhost:5432/cafe"
 
 engine = create_engine(DATABASE_URL)
@@ -11,6 +11,12 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def create_admin(email, username, password):
+    # Cek jika admin dengan email atau username sudah ada
+    existing = session.query(User).filter((User.email == email) | (User.username == username)).first()
+    if existing:
+        print("Admin dengan email atau username ini sudah ada.")
+        return
+
     hashed_pwd = hash_password(password)
     admin_user = User(email=email, username=username, password=hashed_pwd, role='admin')
     session.add(admin_user)

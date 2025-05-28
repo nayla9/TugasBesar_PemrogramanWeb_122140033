@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, Float
 from sqlalchemy.orm import relationship
 from .meta import Base
+from utils.security import hash_password, verify_password
 
 class Cafe(Base):
     __tablename__ = 'cafes'
