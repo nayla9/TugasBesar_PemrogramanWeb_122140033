@@ -1,47 +1,57 @@
-import React, { useContext, useState, useEffect} from 'react';
-import { AppContext } from '../context/AppContext';
-import CafeCard from '../components/CafeCard';
-import { getCafes } from '../services/api';
+import React, { useState } from "react";
+import { useCafe } from "../hooks/useCafe";
+import { Link } from "react-router-dom";
 
 const Home = () => {
-  const { cafes } = useContext(AppContext);
-  const [search, setSearch] = useState('');
-  const [fetchedCafes, setFetchedCafes] = useState([]);
+  const { cafes } = useCafe();
+  const [searchTerm, setSearchTerm] = useState("");
 
-useEffect(() => {
-  getCafes()
-    .then(res => setCafes(res.data))
-    .catch(err => console.error('Gagal mengambil data kafe:', err));
-}, []);
-
-  const sourceCafes = fetchedCafes.length > 0 ? fetchedCafes : cafes;
-
-  const filteredCafes = cafes.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.location.toLowerCase().includes(search.toLowerCase())
+  // Filter cafe berdasarkan nama yang mengandung searchTerm (case insensitive)
+  const filteredCafes = cafes.filter((cafe) =>
+    cafe.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
-    <div>
-      <h1 className="section-title mb-2">Explore Local Cafés with Comfort</h1>
-      <p className="slogan mb-4">“Nge-spot Kafe Gak Pernah Seasy Ini”</p>
+    <div style={{ padding: "2rem" }}>
+      <h1 style={{ marginBottom: "1rem" }}>Daftar Kafe</h1>
 
+      {/* Search bar */}
       <input
-        className="form-control mb-4"
-        placeholder="Cari kafe berdasarkan nama atau lokasi..."
-        value={search}
-        onChange={e => setSearch(e.target.value)}
+        type="text"
+        placeholder="Cari kafe..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{
+          padding: "0.5rem",
+          marginBottom: "1rem",
+          width: "100%",
+          maxWidth: "400px",
+          borderRadius: "4px",
+          border: "1px solid #ccc",
+        }}
       />
 
-      {filteredCafes.length === 0 && <p>Tidak ada kafe yang sesuai.</p>}
-
-      <div className="row">
-        {filteredCafes.map(cafe => (
-          <div className="col-md-6 col-lg-4 mb-4" key={cafe.id}>
-            <CafeCard cafe={cafe} />
-          </div>
-        ))}
-      </div>
+      {filteredCafes.length === 0 ? (
+        <p>Belum ada kafe yang cocok dengan pencarian.</p>
+      ) : (
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {filteredCafes.map((cafe) => (
+            <li
+              key={cafe.id}
+              style={{
+                border: "1px solid #ccc",
+                borderRadius: "8px",
+                padding: "1rem",
+                marginBottom: "1rem",
+              }}
+            >
+              <h2>{cafe.name}</h2>
+              <p>{cafe.description}</p>
+              <Link to={`/detail/${cafe.id}`}>Lihat Detail</Link>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

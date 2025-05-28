@@ -1,114 +1,120 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { mockCafes } from '../services/mock';
+import axios from 'axios';
+import { useCafe } from '../hooks/useCafe';
+import { useReview } from '../hooks/useReview';
 
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const ADMIN_SECRET = 'admin123';
+  // 🔐 AUTH STATE
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const [user, setUser] = useState(() => {
-    const saved = localStorage.getItem('user');
-    return saved ? JSON.parse(saved) : null;
-  });
+  // 📦 DATA HOOKS
+  const { cafes, createCafe, updateCafe, deleteCafe } = useCafe();
+  const { reviews, addReview } = useReview();
 
-  const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem('users');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [cafes, setCafes] = useState(() => {
-    const saved = localStorage.getItem('cafes');
-    return saved ? JSON.parse(saved) : mockCafes;
-  });
-
-  // Simpan ke localStorage setiap ada perubahan
+  // Set axios header Authorization tiap kali token berubah
   useEffect(() => {
-    localStorage.setItem('users', JSON.stringify(users));
-  }, [users]);
-
-  useEffect(() => {
-    localStorage.setItem('cafes', JSON.stringify(cafes));
-  }, [cafes]);
-
-  useEffect(() => {
-    if (user) localStorage.setItem('user', JSON.stringify(user));
-    else localStorage.removeItem('user');
-  }, [user]);
-
-  // --- Autentikasi ---
-  const register = ({ username, email, password }) => {
-    if (users.find(u => u.email === email)) {
-      return { success: false, message: 'Email sudah terdaftar' };
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common['Authorization'];
     }
-    const newUser = { username, email, password, role: 'user' };
-    setUsers(prev => [...prev, newUser]);
-    return { success: true, message: 'Registrasi berhasil' };
+  }, [token]);
+
+  // 🧠 AUTENTIKASI HANDLERS
+  const login = async (credentials) => {
+    setLoading(true);
+    try {
+      const res = await axios.post('/auth/login', credentials);
+      if (res.data.status === 'success') {
+        const { user, token } = res.data;
+        setUser(user);
+        setToken(token);
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('token', token);
+        return true;  // sukses
+      } else {
+        // kembalikan pesan error agar bisa ditampilkan di UI
+        return res.data.message || 'Login gagal';
+      }
+    } catch (err) {
+      console.error('Login error:', err);
+      return 'Login error: ' + (err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const login = ({ email, password, username = 'Google User' }) => {
-    // Google login
-    if (email === 'googleuser@gmail.com') {
-      const googleUser = { username: 'Google User', email, role: 'user' };
-      setUser(googleUser);
-      return { success: true };
+  const register = async (newUser) => {
+    setLoading(true);
+    try {
+      const res = await axios.post('/auth/register', newUser);
+      if (res.data.status === 'success') {
+        // langsung login setelah register berhasil
+        return await login({ email: newUser.email, password: newUser.password });
+      } else {
+        return res.data.message || 'Register gagal';
+      }
+    } catch (err) {
+      console.error('Register error:', err);
+      return 'Register error: ' + (err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
     }
-
-    // Admin login
-    if (password === ADMIN_SECRET) {
-      const adminUser = { username, email, role: 'admin' };
-      setUser(adminUser);
-      return { success: true };
-    }
-
-    // User login
-    const found = users.find(u => u.email === email && u.password === password);
-    if (!found) {
-      return { success: false, message: 'Email atau password salah' };
-    }
-
-    setUser(found);
-    return { success: true };
   };
 
   const logout = () => {
     setUser(null);
+    setToken(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
-  // --- CRUD café ---
-  const addCafe = (cafe) => {
-    setCafes(prev => [...prev, { ...cafe, id: Date.now(), reviews: [] }]);
-  };
+  // 🧠 LOAD USER DARI LOCAL STORAGE SAAT PERTAMA KALI
+  useEffect(() => {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem('user'));
+      const storedToken = localStorage.getItem('token');
+      if (storedUser && storedToken) {
+        setUser(storedUser);
+        setToken(storedToken);
+      }
+    } catch (e) {
+      console.warn('Gagal parsing user/token dari localStorage', e);
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+    }
+  }, []);
 
-  const editCafe = (id, updatedCafe) => {
-    setCafes(prev => prev.map(c => c.id === id ? { ...c, ...updatedCafe } : c));
-  };
-
-  const deleteCafe = (id) => {
-    setCafes(prev => prev.filter(c => c.id !== id));
-  };
-
-  const addReview = (cafeId, review) => {
-    setCafes(prev =>
-      prev.map(cafe => {
-        if (cafe.id === cafeId) {
-          const newReviews = [...cafe.reviews, { ...review, id: Date.now() }];
-          const newRating = newReviews.reduce((sum, r) => sum + r.rating, 0) / newReviews.length;
-          return {
-            ...cafe,
-            reviews: newReviews,
-            rating: parseFloat(newRating.toFixed(2)),
-          };
-        }
-        return cafe;
-      })
-    );
-  };
+  // ☕ CRUD CAFE
+  const addCafe = (cafe) => createCafe(cafe);
+  const editCafe = (id, updatedCafe) => updateCafe(id, updatedCafe);
+  const deleteCafeFunc = (id) => deleteCafe(id);
 
   return (
-    <AppContext.Provider value={{
-      user, setUser, login, logout, register,
-      cafes, addCafe, editCafe, deleteCafe, addReview
-    }}>
+    <AppContext.Provider
+      value={{
+        // Cafe dan review
+        cafes,
+        addCafe,
+        editCafe,
+        deleteCafe: deleteCafeFunc,
+        reviews,
+        addReview,
+
+        // Auth
+        user,
+        setUser,
+        token,
+        login,
+        register,
+        logout,
+        loading,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );

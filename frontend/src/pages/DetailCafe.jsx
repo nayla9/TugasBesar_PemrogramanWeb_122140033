@@ -1,30 +1,62 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
-import ReviewForm from '../components/ReviewForm';
+import { AppContext } from '../context/AppContext.jsx';
+import { useCafe } from '../hooks/useCafe.js';
+import { useReview } from '../hooks/useReview.js';
+import styles from '../styles/DetailCafe.module.css';
 
 const DetailCafe = () => {
   const { id } = useParams();
-  const { cafes, addReview, user } = useContext(AppContext);
+  const { user } = useContext(AppContext);
+  const { cafes, fetchCafes } = useCafe();
+  const { createReview } = useReview();
+  const [cafe, setCafe] = useState(null);
+  const [review, setReview] = useState({ comment: '', rating: 5 });
+  const [error, setError] = useState('');
 
-  const cafe = cafes.find(c => c.id === parseInt(id));
-  if (!cafe) return <p>Café tidak ditemukan</p>;
+  useEffect(() => {
+    if (cafes.length > 0) {
+      const found = cafes.find(c => c.id === parseInt(id));
+      setCafe(found);
+    }
+  }, [cafes, id]);
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    fetchCafes();
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!user) return alert('Harap login untuk memberi ulasan');
-    addReview(cafe.id, { ...review, username: user.username });
-    setReview({ comment: '', rating: 5 });
+    if (!user) {
+      alert('Harap login untuk memberi ulasan');
+      return;
+    }
+
+    try {
+      setError('');
+      const newReview = { ...review, username: user.username, cafe_id: cafe.id };
+      await createReview(newReview);
+      setCafe({ 
+        ...cafe, 
+        reviews: [...(cafe.reviews || []), newReview] 
+      });
+      setReview({ comment: '', rating: 5 });
+    } catch (err) {
+      setError('Gagal mengirim ulasan');
+      console.error(err);
+    }
   };
 
+  if (!cafe) return <p>Memuat data kafe...</p>;
+
   return (
-    <div className="card p-4">
+    <div className={styles['detail-container']}>
       <div className="row">
         <div className="col-md-6">
           <img src={cafe.image} alt={cafe.name} className="img-fluid rounded mb-3" />
         </div>
         <div className="col-md-6">
-          <h2 className="section-title">{cafe.name}</h2>
+          <h2 className={styles['detail-title']}>{cafe.name}</h2>
           <p><strong>Lokasi:</strong> {cafe.location}</p>
           <p><strong>Jam Buka:</strong> {cafe.open_hours}</p>
           <p><strong>Deskripsi:</strong> {cafe.description}</p>
@@ -35,11 +67,14 @@ const DetailCafe = () => {
       <hr />
 
       <h4 className="mt-4">Ulasan</h4>
-      {cafe.reviews.map(r => (
-        <div key={r.id} className="mb-2">
+      {cafe.reviews?.length === 0 && <p>Belum ada ulasan.</p>}
+      {cafe.reviews?.map((r, i) => (
+        <div key={i} className="mb-2">
           <strong>{r.username}</strong>: {r.comment} ({r.rating} ⭐)
         </div>
       ))}
+
+      {error && <p className="text-danger">{error}</p>}
 
       <form onSubmit={handleSubmit} className="mt-3">
         <div className="mb-2">
@@ -59,6 +94,7 @@ const DetailCafe = () => {
             rows="3"
             value={review.comment}
             onChange={e => setReview({ ...review, comment: e.target.value })}
+            required
           />
         </div>
         <button type="submit" className="btn btn-brown">Kirim Ulasan</button>

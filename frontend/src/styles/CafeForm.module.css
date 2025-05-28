@@ -1,0 +1,17 @@
+.form-container {
+  background-color: var(--cream);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+label {
+  font-weight: bold;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+  display: block;
+}

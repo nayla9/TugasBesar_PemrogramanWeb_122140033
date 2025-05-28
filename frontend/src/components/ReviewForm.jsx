@@ -1,40 +1,61 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const ReviewForm = ({ onSubmit }) => {
-  const [comment, setComment] = useState('');
-  const [rating, setRating] = useState(5);
+export function useReview() {
+  const [reviews, setReviews] = useState([]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit({ comment, rating: Number(rating) });
-    setComment('');
-    setRating(5);
+  const fetchReviews = async () => {
+    try {
+      const res = await axios.get("/reviews");
+      setReviews(res.data.reviews);
+    } catch (err) {
+      console.error("Gagal fetch reviews:", err);
+    }
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="mb-3">
-      <div className="mb-2">
-        <label>Ulasan</label>
-        <textarea
-          className="form-control"
-          required
-          value={comment}
-          onChange={e => setComment(e.target.value)}
-        ></textarea>
-      </div>
-      <div className="mb-2">
-        <label>Rating</label>
-        <select
-          className="form-select"
-          value={rating}
-          onChange={e => setRating(e.target.value)}
-        >
-          {[5,4,3,2,1].map(n => <option key={n} value={n}>{n}</option>)}
-        </select>
-      </div>
-      <button type="submit" className="btn btn-primary">Tambah Ulasan</button>
-    </form>
-  );
-};
+  const createReview = async (data) => {
+    try {
+      const res = await axios.post("/reviews/create", data);
+      if (res.data.status === "success") {
+        fetchReviews();
+      } else {
+        console.error("Gagal tambah review:", res.data.message);
+      }
+    } catch (err) {
+      console.error("Gagal tambah review:", err);
+    }
+  };
 
-export default ReviewForm;
+  const updateReview = async (id, data) => {
+    try {
+      // Pakai backtick di sini juga
+      const res = await axios.put(/reviews/update/$,{id}, data);
+      if (res.data.status === "success") {
+        fetchReviews();
+      } else {
+        console.error("Gagal update review:", res.data.message);
+      }
+    } catch (err) {
+      console.error("Gagal update review:", err);
+    }
+  };
+
+  const deleteReview = async (id) => {
+    try {
+      const res = await axios.delete(/reviews/delete/$,{id});
+      if (res.data.status === "success") {
+        fetchReviews();
+      } else {
+        console.error("Gagal hapus review:", res.data.message);
+      }
+    } catch (err) {
+      console.error("Gagal hapus review:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  return { reviews, createReview, updateReview, deleteReview };
+}
