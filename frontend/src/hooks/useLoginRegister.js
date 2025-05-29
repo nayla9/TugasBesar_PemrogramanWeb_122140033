@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect} from "react";
+import axios from "axios";
 
 export function useLoginRegister() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+   useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   /**
    * registerUser menerima objek registerData dengan properti:
@@ -26,6 +34,9 @@ export function useLoginRegister() {
 
       // Simpan user ke state (minimal id, username, dan role)
       setUser({ id: data.user_id, username: data.username, role: data.role });
+
+      setUser(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user));
 
       return data;
     } catch (err) {
@@ -58,6 +69,7 @@ export function useLoginRegister() {
 
       // Simpan user lengkap ke state, termasuk role
       setUser(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user));
 
       return data.user;
     } catch (err) {

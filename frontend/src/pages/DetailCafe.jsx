@@ -53,7 +53,7 @@ const DetailCafe = () => {
     <div className={styles['detail-container']}>
       <div className="row">
         <div className="col-md-6">
-          <img src={cafe.image} alt={cafe.name} className="img-fluid rounded mb-3" />
+          <img src={cafe.image} alt={cafe.name} className={styles['detail-image']} />
         </div>
         <div className="col-md-6">
           <h2 className={styles['detail-title']}>{cafe.name}</h2>

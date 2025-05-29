@@ -1,21 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useCafe } from "../hooks/useCafe";
 import { Link } from "react-router-dom";
 
 const Home = () => {
-  const { cafes } = useCafe();
+  const { cafes, loading, error } = useCafe();
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Filter cafe berdasarkan nama yang mengandung searchTerm (case insensitive)
-  const filteredCafes = cafes.filter((cafe) =>
-    cafe.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredCafes = useMemo(() => {
+    return cafes.filter((cafe) =>
+      cafe.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [cafes, searchTerm]);
+
+  if (loading) return <p>Memuat data kafe...</p>;
+  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
 
   return (
     <div style={{ padding: "2rem" }}>
       <h1 style={{ marginBottom: "1rem" }}>Daftar Kafe</h1>
 
-      {/* Search bar */}
       <input
         type="text"
         placeholder="Cari kafe..."

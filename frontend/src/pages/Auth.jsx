@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import { useLoginRegister } from '../hooks/useLoginRegister.js';
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../context/AppContext';
 import styles from '../styles/Auth.module.css';
+import Home from '../pages/Home';           
+import AdminDashboard from '../pages/AdminDashboard'
+
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { registerUser, loginUser } = useLoginRegister();
-
-  // Tambahkan 'role' default di form state
+  const { login, register } = useContext(AppContext);  // ambil fungsi dari context
+  // Form state, role default "user"
   const [form, setForm] = useState({ username: '', email: '', password: '', role: 'user' });
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState('');
@@ -29,16 +32,29 @@ const Auth = () => {
     setLoading(true);
     try {
       if (isRegister) {
-        // Kirim semua data form termasuk role untuk register
-        const res = await registerUser(form);
-        setSuccess(res.message || 'Registrasi berhasil');
-        setTimeout(() => setIsRegister(false), 1500);
+        // Panggil register dari context
+        const res = await register(form);
+        if (res === true) {
+          setSuccess('Registrasi berhasil! Silakan login.');
+          setForm({ username: '', email: '', password: '', role: 'user' });
+          setTimeout(() => setIsRegister(false), 1500);
+        } else {
+          setError(res || 'Registrasi gagal');
+        }
       } else {
-        // Untuk login, kirim { identity, password }
+        // Login
         const loginData = { identity: form.email, password: form.password };
-        const user = await loginUser(loginData);
-        if (user) {
-          navigate('/');
+        const res = await login(loginData);
+        if (res === true) {
+          // Ambil user dari localStorage (atau kamu juga bisa simpan user di context)
+          const storedUser = JSON.parse(localStorage.getItem('user'));
+          if (storedUser?.role === 'admin') {
+            navigate('/admin');
+          } else {
+            navigate('/');
+          }
+        } else {
+          setError(res || 'Login gagal');
         }
       }
     } catch (err) {
@@ -49,9 +65,9 @@ const Auth = () => {
   };
 
   const toggleMode = () => {
-    setIsRegister(!isRegister);
     clearMessages();
-    setForm({ username: '', email: '', password: '', role: 'user' }); // reset semua form termasuk role
+    setIsRegister(!isRegister);
+    setForm({ username: '', email: '', password: '', role: 'user' });
   };
 
   return (
@@ -106,7 +122,11 @@ const Auth = () => {
           required
           disabled={loading}
         />
-        <button className="btn btn-primary w-100" type="submit" disabled={loading}>
+        <button
+          className="btn btn-primary w-100"
+          type="submit"
+          disabled={loading}
+        >
           {loading ? (isRegister ? 'Mendaftarkan...' : 'Masuk...') : (isRegister ? 'Daftar' : 'Login')}
         </button>
       </form>

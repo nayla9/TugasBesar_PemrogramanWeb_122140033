@@ -10,9 +10,10 @@ export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [loadingUser, setLoadingUser] = useState(true); // 🆕 Tambahkan flag ini
 
   // 📦 DATA HOOKS
-  const { cafes, createCafe, updateCafe, deleteCafe } = useCafe();
+  const { cafes, createCafe, updateCafe, deleteCafe } = useCafe(!loadingUser);
   const { reviews, addReview } = useReview();
 
   // Set axios header Authorization tiap kali token berubah
@@ -37,7 +38,6 @@ export const AppProvider = ({ children }) => {
         localStorage.setItem('token', token);
         return true;  // sukses
       } else {
-        // kembalikan pesan error agar bisa ditampilkan di UI
         return res.data.message || 'Login gagal';
       }
     } catch (err) {
@@ -53,7 +53,7 @@ export const AppProvider = ({ children }) => {
     try {
       const res = await axios.post('/auth/register', newUser);
       if (res.data.status === 'success') {
-        // langsung login setelah register berhasil
+        // langsung login setelah register
         return await login({ email: newUser.email, password: newUser.password });
       } else {
         return res.data.message || 'Register gagal';
@@ -73,7 +73,7 @@ export const AppProvider = ({ children }) => {
     localStorage.removeItem('token');
   };
 
-  // 🧠 LOAD USER DARI LOCAL STORAGE SAAT PERTAMA KALI
+  // 🧠 LOAD USER DARI LOCAL STORAGE SAAT APP DIBUKA
   useEffect(() => {
     try {
       const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -86,6 +86,8 @@ export const AppProvider = ({ children }) => {
       console.warn('Gagal parsing user/token dari localStorage', e);
       localStorage.removeItem('user');
       localStorage.removeItem('token');
+    } finally {
+      setLoadingUser(false); // 🔥 Penting: tandai user sudah diload
     }
   }, []);
 
@@ -97,7 +99,6 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
-        // Cafe dan review
         cafes,
         addCafe,
         editCafe,
@@ -113,6 +114,7 @@ export const AppProvider = ({ children }) => {
         register,
         logout,
         loading,
+        loadingUser, // 🆕 Tambahkan ini ke context
       }}
     >
       {children}

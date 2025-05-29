@@ -39,6 +39,7 @@ def cafe_create(request):
 
     session = request.dbsession
     data = request.json_body
+
     cafe = Cafe(
         name=data.get('name'),
         location=data.get('location'),
@@ -49,6 +50,8 @@ def cafe_create(request):
     )
     session.add(cafe)
     session.flush()
+
+    request.response.status = 201
     return {'status': 'success', 'message': 'Cafe berhasil ditambahkan', 'id': cafe.id}
 
 # PUT /cafes/{id} — hanya admin
@@ -73,6 +76,7 @@ def cafe_update(request):
     cafe.image = data.get('image', cafe.image)
     cafe.rating = data.get('rating', cafe.rating)
     session.flush()
+
     return {'status': 'success', 'message': 'Cafe berhasil diperbarui'}
 
 # DELETE /cafes/{id} — hanya admin
@@ -91,4 +95,6 @@ def cafe_delete(request):
 
     session.delete(cafe)
     session.flush()
+
+    request.response.status = 200
     return {'status': 'success', 'message': 'Cafe berhasil dihapus'}

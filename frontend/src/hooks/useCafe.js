@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback} from "react";
 import axios from "axios";
 
 export function useCafe() {
   const [cafes, setCafes] = useState([]);
 
-  const fetchCafes = async () => {
+  const fetchCafes = useCallback (async () => {
     try {
       const res = await axios.get("/cafes");
       setCafes(res.data.cafes);
     } catch (err) {
       console.error("Gagal fetch cafes:", err);
     }
-  };
+  }, []);
 
   const createCafe = async (data) => {
     try {
@@ -56,5 +56,5 @@ export function useCafe() {
     fetchCafes();
   }, []);
 
-  return { cafes, createCafe, updateCafe, deleteCafe };
+  return { cafes, fetchCafes, createCafe, updateCafe, deleteCafe };
 }

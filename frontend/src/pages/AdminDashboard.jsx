@@ -1,44 +1,58 @@
 import React, { useState, useEffect } from 'react';
 import { useCafe } from '../hooks/useCafe.js';
-import { useLoginRegister } from '../hooks/useLoginRegister.js';
 import CafeForm from '../components/CafeForm.jsx';
 import styles from '../styles/AdminDashboard.module.css';
+import { AppContext } from '../context/AppContext';
+import { useLoginRegister } from '../hooks/useLoginRegister.js';
 
 const AdminDashboard = () => {
   const { user } = useLoginRegister();
-  const { cafes, fetchCafes, createCafe, updateCafe, deleteCafe } = useCafe();
+  const { cafes = [], fetchCafes, createCafe, updateCafe, deleteCafe } = useCafe();
   const [editingCafe, setEditingCafe] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user?.role === 'admin') {
-      fetchCafes().catch(() => setError('Gagal memuat data cafe'));
+      setLoading(true);
+      fetchCafes()
+        .catch(() => setError('Gagal memuat data cafe'))
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
   }, [user]);
 
   const handleAdd = () => {
     setEditingCafe(null);
     setShowForm(true);
+    setError('');
   };
 
   const handleEdit = (cafe) => {
     setEditingCafe(cafe);
     setShowForm(true);
+    setError('');
   };
 
   const handleDelete = async (id) => {
     if (window.confirm('Yakin ingin menghapus café ini?')) {
+      setError('');
       try {
         await deleteCafe(id);
-        fetchCafes();
-      } catch (err) {
+        setLoading(true);
+        await fetchCafes();
+      } catch {
         setError('Gagal menghapus cafe');
+      } finally {
+        setLoading(false);
       }
     }
   };
 
   const handleFormSubmit = async (data) => {
+    setError('');
     try {
       if (editingCafe) {
         await updateCafe(editingCafe.id, data);
@@ -46,12 +60,17 @@ const AdminDashboard = () => {
         await createCafe(data);
       }
       setShowForm(false);
-      fetchCafes();
-    } catch (err) {
+      setLoading(true);
+      await fetchCafes();
+    } catch {
       setError('Gagal menyimpan data cafe');
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Guarding loading & akses
+  if (loading) return <div>Memuat...</div>;
   if (!user) return <div>Silakan login terlebih dahulu</div>;
   if (user.role !== 'admin') return <div>Anda bukan admin, akses ditolak</div>;
 
@@ -59,6 +78,7 @@ const AdminDashboard = () => {
     <div className={styles.dashboardContainer}>
       <h2 className={styles.title}>Dashboard Admin</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
+
       {!showForm ? (
         <>
           <button className={styles.addButton} onClick={handleAdd}>+ Tambah Café</button>
@@ -73,17 +93,23 @@ const AdminDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {cafes.map(cafe => (
-                  <tr key={cafe.id}>
-                    <td>{cafe.name}</td>
-                    <td>{cafe.location}</td>
-                    <td>{cafe.open_hours}</td>
-                    <td>
-                      <button className={styles.editButton} onClick={() => handleEdit(cafe)}>Edit</button>
-                      <button className={styles.deleteButton} onClick={() => handleDelete(cafe.id)}>Hapus</button>
-                    </td>
+                {cafes.length > 0 ? (
+                  cafes.map(cafe => (
+                    <tr key={cafe.id}>
+                      <td>{cafe.name}</td>
+                      <td>{cafe.location}</td>
+                      <td>{cafe.open_hours}</td>
+                      <td>
+                        <button className={styles.editButton} onClick={() => handleEdit(cafe)}>Edit</button>
+                        <button className={styles.deleteButton} onClick={() => handleDelete(cafe.id)}>Hapus</button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" style={{ textAlign: 'center' }}>Tidak ada data cafe</td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

@@ -1,8 +1,9 @@
 from pyramid.view import view_config
 from ..models import User
 from passlib.hash import bcrypt
+from sqlalchemy.exc import SQLAlchemyError
 from .auth import require_role
-from utils.security import hash_password, verify_password
+from ..utils.security import hash_password, verify_password
 
 @view_config(route_name="register", renderer="json", request_method="POST")
 def register_user(request):
@@ -21,11 +22,7 @@ def register_user(request):
     if role not in ("user", "admin"):
         role = "user"
 
-    # Jika ingin larang register sebagai admin langsung:
-    # if role == "admin":
-    #     request.response.status = 403
-    #     return {"status": "error", "message": "Tidak bisa mendaftar sebagai admin"}
-
+    # Cek apakah email atau username sudah dipakai
     existing_user = session.query(User).filter(
         (User.email == email) | (User.username == username)
     ).first()
@@ -33,23 +30,26 @@ def register_user(request):
         request.response.status = 409
         return {"status": "error", "message": "Email atau username sudah digunakan"}
 
-    hashed_password = bcrypt.hash(password)
+    try:
+        hashed_password = hash_password(password)
+        new_user = User(email=email, username=username, password=hashed_password, role=role)
+        session.add(new_user)
+        session.flush()
 
-    user = User(email=email, username=username, password=hashed_password, role=role)
-    session.add(user)
-    session.flush()
-
-    request.response.status = 201
-    return {
-        "status": "success",
-        "message": "User berhasil didaftarkan",
-        "user": {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "role": user.role,
-        },
-    }
+        request.response.status = 201
+        return {
+            "status": "success",
+            "message": "User berhasil didaftarkan",
+            "user": {
+                "id": new_user.id,
+                "email": new_user.email,
+                "username": new_user.username,
+                "role": new_user.role,
+            },
+        }
+    except SQLAlchemyError as e:
+        request.response.status = 500
+        return {"status": "error", "message": str(e)}
 
 @view_config(route_name="login", renderer="json", request_method="POST")
 def login(request):
@@ -71,9 +71,12 @@ def login(request):
         request.response.status = 404
         return {"status": "error", "message": "User tidak ditemukan"}
 
-    if not bcrypt.verify(password, user.password):
+    if not verify_password(password, user.password):
         request.response.status = 401
         return {"status": "error", "message": "Password salah"}
+    
+    request.session['user_id'] = user.id
+    request.session['role'] = user.role
 
     return {
         "status": "success",
