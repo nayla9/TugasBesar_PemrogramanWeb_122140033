@@ -1,16 +1,12 @@
-import React, { useState, useContext} from 'react';
-import { useLoginRegister } from '../hooks/useLoginRegister.js';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import styles from '../styles/Auth.module.css';
-import Home from '../pages/Home';           
-import AdminDashboard from '../pages/AdminDashboard'
-
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { login, register } = useContext(AppContext);  // ambil fungsi dari context
-  // Form state, role default "user"
+  const { login, register } = useContext(AppContext);
+
   const [form, setForm] = useState({ username: '', email: '', password: '', role: 'user' });
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState('');
@@ -32,7 +28,6 @@ const Auth = () => {
     setLoading(true);
     try {
       if (isRegister) {
-        // Panggil register dari context
         const res = await register(form);
         if (res === true) {
           setSuccess('Registrasi berhasil! Silakan login.');
@@ -42,11 +37,10 @@ const Auth = () => {
           setError(res || 'Registrasi gagal');
         }
       } else {
-        // Login
-        const loginData = { identity: form.email, password: form.password };
+        const loginData = { email: form.email, password: form.password };
+        console.log('Login payload:', loginData); // DEBUG
         const res = await login(loginData);
         if (res === true) {
-          // Ambil user dari localStorage (atau kamu juga bisa simpan user di context)
           const storedUser = JSON.parse(localStorage.getItem('user'));
           if (storedUser?.role === 'admin') {
             navigate('/admin');
@@ -58,6 +52,7 @@ const Auth = () => {
         }
       }
     } catch (err) {
+      console.error('Login error:', err.response?.data || err.message);
       setError(err.message || 'Terjadi kesalahan');
     } finally {
       setLoading(false);
@@ -81,7 +76,7 @@ const Auth = () => {
         {isRegister && (
           <>
             <input
-              className="form-control mb-2"
+              className={styles['auth-input']}
               name="username"
               placeholder="Nama"
               value={form.username}
@@ -90,7 +85,7 @@ const Auth = () => {
               disabled={loading}
             />
             <select
-              className="form-control mb-3"
+              className={styles['auth-input']}
               name="role"
               value={form.role}
               onChange={handleChange}
@@ -102,8 +97,9 @@ const Auth = () => {
             </select>
           </>
         )}
+
         <input
-          className="form-control mb-2"
+          className={styles['auth-input']}
           type="email"
           name="email"
           placeholder="Email"
@@ -113,7 +109,7 @@ const Auth = () => {
           disabled={loading}
         />
         <input
-          className="form-control mb-2"
+          className={styles['auth-input']}
           type="password"
           name="password"
           placeholder="Password"
@@ -123,20 +119,29 @@ const Auth = () => {
           disabled={loading}
         />
         <button
-          className="btn btn-primary w-100"
+          className={styles['login-button']}
           type="submit"
           disabled={loading}
         >
           {loading ? (isRegister ? 'Mendaftarkan...' : 'Masuk...') : (isRegister ? 'Daftar' : 'Login')}
         </button>
       </form>
-      <p className="mt-2 text-center">
+
+      <p className={styles['switch-mode']}>
         {isRegister ? 'Sudah punya akun? ' : 'Belum punya akun? '}
         <button
-          className="btn btn-link p-0"
           type="button"
           onClick={toggleMode}
           disabled={loading}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'white',
+            fontWeight: 'bold',
+            padding: 0,
+            margin: 0,
+            cursor: 'pointer'
+          }}
         >
           {isRegister ? 'Login di sini' : 'Daftar di sini'}
         </button>

@@ -1,16 +1,17 @@
 .detail-container {
   max-width: 800px;
   margin: 2rem auto;
-  background-color: var(--cream);
+  background-color: var(--mocha);
   padding: 2rem;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .detail-title {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: bold;
-  color: var(--espresso);
+  color: var(--deep-roast);
   margin-bottom: 1rem;
 }
 
@@ -20,4 +21,98 @@
   object-fit: cover;
   border-radius: 12px;
   margin-bottom: 1rem;
+}
+
+.detail-info p {
+  margin-bottom: 0.5rem;
+  color: var(--deep-roast);
+  font-size: 1rem;
+}
+
+.review-section {
+  margin-top: 2rem;
+}
+
+.review-section h4 {
+  color: var(--deep-roast);
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+/* ✏️ Review Box */
+.review {
+  background-color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+
+  max-width: 500px;  /* tambahkan ini */
+  margin-left: auto; /* supaya rata tengah */
+  margin-right: auto;
+}
+
+.review strong {
+  color: var(--deep-roast);
+}
+
+/* 📝 Review Form */
+.review-form {
+  margin-top: 1.5rem;
+  background-color: #fdf8f4;
+  padding: 1rem;
+  border-radius: 12px;
+  max-width: 500px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  margin-right: 3rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  display: block;
+  color: var(--espresso);
+  font-size: 0.95rem;
+}
+
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+textarea {
+  min-height: 100px;
+}
+
+/* 🟤 Tombol */
+.btn-brown {
+  background-color: var(--espresso);
+  color: white;
+  padding: 0.45rem 1rem;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-brown:hover {
+  background-color: #5a3e2b;
+}
+
+/* ⚠️ Error Text */
+.text-danger {
+  color: red;
+  font-size: 0.9rem;
 }

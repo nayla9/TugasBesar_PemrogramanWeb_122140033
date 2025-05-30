@@ -32,24 +32,41 @@ const CafeForm = ({ onSubmit, initialData = {}, onCancel }) => {
 
   return (
     <div className={styles['form-container']}>
-      <h4 className="mb-3">{initialData.id ? 'Edit Café' : 'Tambah Café Baru'}</h4>
+      <h3 className={styles['form-title']}>
+        {initialData.id ? 'Edit Café' : 'Tambah Café Baru'}
+      </h3>
       <form onSubmit={handleSubmit}>
         {['name', 'location', 'open_hours', 'description', 'image'].map((field) => (
           <div className={styles['form-group']} key={field}>
-            <label className="form-label text-capitalize">{field.replace('_', ' ')}</label>
-            <input
-              type="text"
-              className="form-control"
-              name={field}
-              value={form[field]}
-              onChange={handleChange}
-              required
-            />
+            <label htmlFor={field}>
+              {field.replace('_', ' ')}
+            </label>
+            {field === 'description' ? (
+              <textarea
+                id={field}
+                name={field}
+                value={form[field]}
+                onChange={handleChange}
+                className={styles['form-input']}
+                required
+              />
+            ) : (
+              <input
+                type="text"
+                id={field}
+                name={field}
+                value={form[field]}
+                onChange={handleChange}
+                className={styles['form-input']}
+                required
+              />
+            )}
           </div>
         ))}
-        <div className="d-flex justify-content-between">
-          <button type="submit" className="btn btn-brown">Simpan</button>
-          <button type="button" className="btn btn-outline-secondary" onClick={onCancel}>Batal</button>
+
+        <div className={styles['form-actions']}>
+          <button type="submit" className={styles['save-button']}>Simpan</button>
+          <button type="button" className={styles['cancel-button']} onClick={onCancel}>Batal</button>
         </div>
       </form>
     </div>

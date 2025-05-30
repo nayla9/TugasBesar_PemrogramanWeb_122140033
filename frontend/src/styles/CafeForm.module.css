@@ -1,17 +1,52 @@
 .form-container {
-  background-color: var(--cream);
+  background-color: #f5e9dc; /* Sama seperti background admindashboard */
   padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-radius: 20px; /* Samakan dengan dashboard */
+  max-width: 700px;
+  margin: 2rem auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); /* Sesuaikan shadow */
+}
+
+.form-title {
+  font-size: 1.5rem;
+  font-weight: 700; /* Lebih bold seperti dashboard */
+  margin-bottom: 1.5rem;
+  color: #4e342e; /* Espresso warna utama */
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
 }
 
 label {
-  font-weight: bold;
-  color: var(--text-dark);
+  font-weight: 600;
+  color: #4e342e; /* Espresso */
   margin-bottom: 0.5rem;
-  display: block;
+  font-size: 0.95rem;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.form-input {
+  padding: 0.7rem 1rem;
+  border: 1px solid #6d4c41; /* Brown dark */
+  border-radius: 12px; /* Sesuaikan */
+  background-color: #efebe9; /* Cream */
+  color: #4e342e; /* Espresso */
+  font-size: 1rem;
+  font-family: 'Segoe UI', sans-serif;
+  transition: border-color 0.2s ease;
+}
+
+.form-input:focus {
+  border-color: #5d4037; /* Brown medium */
+  outline: none;
+}
+
+textarea.form-input {
+  resize: vertical;
+  min-height: 80px;
 }

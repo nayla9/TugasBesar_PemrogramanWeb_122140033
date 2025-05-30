@@ -1,16 +1,98 @@
- .auth-container {
+:root {
+  --cream: #f9f5f0; /* warna cream lembut */
+}
+
+.register-container {
+  width: 100%;
   max-width: 400px;
-  margin: 2rem auto;
-  background-color: var(--cream);
-  padding: 2rem;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin: 60px auto;
+  padding: 2rem 2rem 3rem; 
+  border-radius: 16px; 
+  background-color:  #987554;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12); 
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #3a2a14; /* warna teks gelap agar kontras dengan cream */
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #4b2e05; /* ganti ke warna coklat gelap untuk konsisten */
   font-weight: bold;
-  color: var(--espresso);
+}
+
+.auth-input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-bottom: 15px;
+  border: 1px solid #d9b382; /* border cream coklat seperti di home */
+  border-radius: 16px; /* bulat agar konsisten */
+  font-size: 16px;
+  box-sizing: border-box;
+  font-family: inherit;
+  color: #3a2a14; /* teks warna coklat gelap */
+  background-color: white; /* biar input putih */
+  transition: border-color 0.3s ease;
+}
+
+.auth-input:focus {
+  border-color: #4b2e05; /* warna border saat fokus */
+  outline: none;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #5c3d2e;
+  color: #ffffff;
+  border: none;
+  border-radius: 16px; /* bulat */
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: inherit;
+}
+
+.login-button:hover {
+  background-color: #4a2f23;
+}
+
+.alert {
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  font-size: 14px;
   text-align: center;
-  margin-bottom: 1rem;
+  font-family: inherit;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.switch-mode {
+  margin-top: 15px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.switch-mode a {
+  color: #4b2e05; /* warna coklat agar konsisten */
+  font-weight: bold;
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.switch-mode a:hover {
+  text-decoration: underline;
 }

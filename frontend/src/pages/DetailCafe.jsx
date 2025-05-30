@@ -36,9 +36,9 @@ const DetailCafe = () => {
       setError('');
       const newReview = { ...review, username: user.username, cafe_id: cafe.id };
       await createReview(newReview);
-      setCafe({ 
-        ...cafe, 
-        reviews: [...(cafe.reviews || []), newReview] 
+      setCafe({
+        ...cafe,
+        reviews: [...(cafe.reviews || []), newReview]
       });
       setReview({ comment: '', rating: 5 });
     } catch (err) {
@@ -64,41 +64,42 @@ const DetailCafe = () => {
         </div>
       </div>
 
-      <hr />
+      <div className={styles['review-section']}>
+        <h4>Ulasan</h4>
+        {cafe.reviews?.length === 0 && <p>Belum ada ulasan.</p>}
+        {cafe.reviews?.map((r, i) => (
+          <div key={i} className={styles['review']}>
+            <strong>{r.username}</strong>: {r.comment} ({r.rating} ⭐)
+          </div>
+        ))}
 
-      <h4 className="mt-4">Ulasan</h4>
-      {cafe.reviews?.length === 0 && <p>Belum ada ulasan.</p>}
-      {cafe.reviews?.map((r, i) => (
-        <div key={i} className="mb-2">
-          <strong>{r.username}</strong>: {r.comment} ({r.rating} ⭐)
-        </div>
-      ))}
+        {error && <p className={styles['text-danger']}>{error}</p>}
 
-      {error && <p className="text-danger">{error}</p>}
-
-      <form onSubmit={handleSubmit} className="mt-3">
-        <div className="mb-2">
-          <label>Rating</label>
-          <select
-            className="form-select"
-            value={review.rating}
-            onChange={e => setReview({ ...review, rating: parseInt(e.target.value) })}
-          >
-            {[5, 4, 3, 2, 1].map(n => <option key={n} value={n}>{n}</option>)}
-          </select>
-        </div>
-        <div className="mb-2">
-          <label>Komentar</label>
-          <textarea
-            className="form-control"
-            rows="3"
-            value={review.comment}
-            onChange={e => setReview({ ...review, comment: e.target.value })}
-            required
-          />
-        </div>
-        <button type="submit" className="btn btn-brown">Kirim Ulasan</button>
-      </form>
+        <form onSubmit={handleSubmit} className={styles['review-form']}>
+          <div className={styles['form-group']}>
+            <label>Rating</label>
+            <select
+              value={review.rating}
+              onChange={e => setReview({ ...review, rating: parseInt(e.target.value) })}
+            >
+              {[5, 4, 3, 2, 1].map(n => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          </div>
+          <div className={styles['form-group']}>
+            <label>Komentar</label>
+            <textarea
+              value={review.comment}
+              onChange={e => setReview({ ...review, comment: e.target.value })}
+              required
+            />
+          </div>
+          <button type="submit" className={styles['btn-brown']}>
+            Kirim Ulasan
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

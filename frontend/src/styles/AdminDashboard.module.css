@@ -1,14 +1,99 @@
-.dashboard-container {
+.dashboardContainer {
   padding: 2rem;
-  background-color: var(--cream);
-  border-radius: 16px;
-  margin: 2rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin: 2rem auto;
+  max-width: 1200px;
+  background: linear-gradient(to bottom right, #fef6e4, #f5e9dc);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
-.dashboard-title {
-  font-size: 1.75rem;
-  font-weight: bold;
-  color: var(--espresso);
+.dashboardContainer:hover {
+  transform: scale(1.005);
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4e342e;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid #a1887f;
+  padding-bottom: 0.5rem;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+}
+
+.addButton {
+  background-color: #6d4c41;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
+  border: none;
   margin-bottom: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.addButton:hover {
+  background-color: #5d4037;
+}
+
+.tableResponsive {
+  overflow-x: auto;
+}
+
+.cafeTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1rem;
+}
+
+.cafeTable th,
+.cafeTable td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #d7ccc8;
+  text-align: left;
+}
+
+.cafeTable th {
+  background-color: #efebe9;
+  color: #4e342e;
+  font-weight: 600;
+}
+
+.editButton,
+.deleteButton {
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.editButton {
+  background-color: #5d4037;
+  color: white;
+}
+
+.editButton:hover {
+  background-color: #5d4037;
+}
+
+.deleteButton {
+  background-color: #5d4037;
+  color: white;
+}
+
+.deleteButton:hover {
+  background-color: #5d4037;
+}
+
+:root {
+  --espresso: #4e342e;
+  --cream: #d7ccc8;
+  --brown-light: #bcaaa4;
+  --brown-medium: #8d6e63;
+  --brown-dark: #6d4c41;
 }
